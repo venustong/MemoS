@@ -1,6 +1,8 @@
 -<template>
   <div>
-    <button class="btn-add" @click="addMemoOnDesk">+</button>
+    <button class="btn-add" @click="addMemoOnDesk">
+      <i class="fa fa-plus"></i>
+    </button>
     <my-memo-o-d
       v-for="m in memosOnDesk"
       :key="m.id"
@@ -48,12 +50,13 @@ export default {
 
 <style>
 .btn-add {
-  font-size: 25px;
   float: right;
   width: 40px;
   height: 40px;
+  border-radius: 0;
 }
 .btn-add:hover {
-  background-color: gray;
+  background-color: hotpink;
+  color: #fafafa;
 }
 </style>

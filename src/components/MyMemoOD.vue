@@ -180,6 +180,10 @@ export default {
 </script>
 
 <style scoped>
+* {
+  border-radius: 0;
+}
+
 .mainMM {
   /* top: 0px;
   left: 0px; */
@@ -206,6 +210,7 @@ export default {
 }
 
 .ta {
+  outline: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: transparent;
   min-width: 209px;
@@ -254,7 +259,7 @@ export default {
 
 .head .btn-close {
   position: absolute;
-  right: -1px;
+  right: 0px;
   height: 100%;
   width: 15%;
   background-color: #555;
@@ -263,6 +268,7 @@ export default {
 }
 
 .head .btn-close:hover {
-  background-color: #333;
+  background-color: rgb(239, 98, 145);
+  color: #fafafa;
 }
 </style>

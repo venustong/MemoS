@@ -11,15 +11,21 @@
       @click.stop="deleteNotebook"
       v-show="this.notebook.id != '001'"
     >
-      <i class="fa fa-close fa-2x"></i>
+      <i class="fa fa-close fa-lg"></i>
     </div>
+
     <div
+      class="folder"
+      @click.self="changeNBname(0)"
+      @dblclick.stop="showNotebook(this.notebook.id)"
+    ></div>
+    <!-- <div
       class="folder"
       @click.self="changeNBname(0)"
       @dblclick.stop="showNotebook(this.notebook.id)"
     >
       <i class="fa fa-inbox fa-4x"></i>
-    </div>
+    </div> -->
     <div class="NBname" @dblclick.stop="changeNBname(1)" v-show="!changeName">
       {{ this.value == "" ? this.NBname : this.value }}
     </div>
@@ -124,29 +130,43 @@ export default {
   padding: 0;
 }
 
+input {
+  border: 0;
+  outline: 0;
+  color: palevioletred;
+}
+
 /* notebook封面 */
 div .origin {
   position: relative;
   float: left;
   /* display: inline-block; */
-  width: 80px;
-  height: 80px;
-  margin-left: 5px;
-  margin-right: 15px;
+  width: 183px;
+  height: 30px;
+  margin-left: 8px;
+  margin-right: 10px;
   margin-top: 9px;
   user-select: none;
+
+  border: 1px solid #333;
+  background: #ffffff;
+  box-shadow: 0 0 5px #d5d5d5;
 }
 
 div .origin:hover {
   /* border-radius: 4px; */
-  border-color: rgba(255, 105, 180, 0.656);
+  /* border-color: rgba(255, 105, 180, 0.656);
   box-shadow: 0 0 4px rgba(246, 75, 181, 0.716);
   background-image: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.144),
     rgba(0, 0, 0, 0.032) 50%,
     rgba(255, 255, 255, 0)
-  );
+  ); */
+
+  border: 1px solid hotpink;
+  box-shadow: 0 0 5px #ff94df;
+  /* cursor: pointer; */
 }
 
 /* 暂用，到时需要隐藏，因为会替换成不同的笔记本封面??*/
@@ -175,14 +195,27 @@ div .menu {
 
 .folder {
   position: absolute;
-  top: 47%;
-  left: 52%;
+  border-radius: 3px 0 0 3px;
+  top: -1px;
+  left: -1px;
   width: 30px;
   height: 30px;
-  margin-left: -30px;
-  margin-top: -43px;
-  text-align: center;
-  /* border: 1px solid red; */
+  margin-left: 0;
+  margin-top: 0;
+  /* text-align: center; */
+  background-color: #333;
+  border: 1px solid #333;
+}
+
+.origin:hover .folder {
+  background-color: hotpink;
+  border: 1px solid hotpink;
+  color: hotpink;
+}
+
+.folder:hover {
+  background-color: hotpink;
+  border: 1px solid hotpink;
 }
 
 /* .folder > i {
@@ -192,33 +225,36 @@ div .menu {
 .NBname,
 .inputNBname {
   position: absolute;
-  bottom: 3px;
-  left: 50%;
-  width: 100%;
-  height: 20px;
-  margin-left: -51%;
-  text-align: center;
-  cursor: default;
-  font-size: 12px;
-  line-height: 12px;
+  top: 1px;
+  left: 40px;
+  width: 100px;
+  height: 25px;
+  /* margin-left: -50%; */
+  font-size: 14px;
+  line-height: 14px;
+  /* text-align: center; */
+  /* border: 1px solid red; */
 }
 
 .NBname {
-  width: 80px;
-  overflow: visible;
-  height: 23px;
+  /* width: 80px; */
+  /* overflow: visible;
   left: 50%;
   word-wrap: break-word;
+  font-size: 12px;
+  line-height: 12px; */
   /* //margin-top: 5px; */
   /* border: 1px solid red; */
+  top: 2px;
+  margin-top: 5px;
 }
 
 div.delete {
   position: absolute;
   right: 0px;
-  top: -5px;
-  width: 15px;
-  height: 15px;
+  top: -10px;
+  width: 10px;
+  height: 10px;
   opacity: 0;
   /* border: 1px solid red; */
 }

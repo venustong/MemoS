@@ -1,16 +1,21 @@
 -<template>
-  <div class="sideMemos" @click="showSideMenu(0)" @dblclick="showMMTD">
-    <button class="btn-detail" @click.stop="showSideMenu(1)">
+  <div class="sideMemos" @click="showSideMenu(1)" @dblclick="showMMTD">
+    <!-- <button class="btn-detail" @click.stop="showSideMenu(1)">
       <i class="fa fa-ellipsis-h"></i>
-    </button>
-    <ul v-show="showedSideMenu" @mouseleave.stop="showSideMenu(0)">
+    </button> -->
+    <div class="delete" @click.stop="deleteMemo">
+      <i class="fa fa-close fa-lg"></i>
+    </div>
+    <!-- <ul v-show="showedSideMenu" @mouseleave.stop="showSideMenu(0)">
       <li class="delete" @click.stop="deleteMemo">delete</li>
       <li>move</li>
-    </ul>
+    </ul> -->
     <p class="pId">{{ this.memo.id }}</p>
     <p class="pContent">
-      <i class="fa fa-star" v-show="this.memo.notebookId != '001'"></i
-      >{{ this.memo.content }}
+      {{ this.memo.content
+      }}<span v-show="this.memo.notebookId != '001'">
+        -<i class="fa fa-inbox"></i
+      ></span>
     </p>
   </div>
 </template>
@@ -47,7 +52,7 @@ export default {
 </script>
 
 <style>
-.btn-detail {
+/* .btn-detail {
   float: right;
   width: 20px;
   height: 20px;
@@ -72,7 +77,7 @@ ul li {
 }
 ul li:hover {
   background-color: #aaa;
-}
+} */
 
 .sideMemos {
   position: relative;
@@ -110,5 +115,12 @@ ul li:hover {
 
 .sideMemos .pContent {
   font-size: 12px;
+}
+
+.sideMemos > .delete {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  /* border: 1px solid red; */
 }
 </style>

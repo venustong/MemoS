@@ -26,10 +26,25 @@
       </div>
     </div>
     <div class="sidebar">
-      <!-- <div class="sidetest">0</div> -->
+      <input
+        type="text"
+        class="searchbar"
+        v-model="searchVal"
+        placeholder="search"
+      />
       <!-- <button @click="test">hhhhhhhhhh</button> -->
+
       <my-memo-s-d
+        v-show="!this.searchVal"
         v-for="m in memos"
+        :key="m.index"
+        :memo="m"
+        :deleteMM="deleteMM"
+        :addMMOD="addMMOD"
+      ></my-memo-s-d>
+      <my-memo-s-d
+        v-show="this.searchVal"
+        v-for="m in sMemos"
         :key="m.index"
         :memo="m"
         :deleteMM="deleteMM"
@@ -51,6 +66,9 @@
       :showedNB="showedNB"
       :hideNB="hideNB"
       :getMemosNB="getMemosNB"
+      :deleteMM="deleteMM"
+      :addMMOD="addMMOD"
+      :showedNBname="showedNBname"
     ></showed-notebook>
   </div>
 </template>
@@ -61,6 +79,8 @@ import MyNotebook from "./components/MyNotebook.vue";
 import ShowedNotebook from "./components/ShowedNotebook.vue";
 import MyDesk from "./components/MyDesk.vue";
 import MyMemoSD from "./components/MyMemoSD.vue";
+// import { debounce } from "./components/debounce";
+import { throttle } from "./components/throttle";
 
 import { nanoid } from "nanoid";
 export default {
@@ -77,12 +97,14 @@ export default {
       notebooks: JSON.parse(localStorage.getItem("notebooks")) || [],
       memosOnDesk: JSON.parse(localStorage.getItem("memosOD")) || [],
       memos: JSON.parse(localStorage.getItem("memos")) || [],
+      sMemos: [],
       showedNB: "",
       desk: {
         id: "001",
         memoCount: 0,
         name: "desk",
       },
+      searchVal: "",
     };
   },
   methods: {
@@ -130,6 +152,11 @@ export default {
       this.memos = this.memos.filter((memo) => {
         return memo.notebookId != id;
       });
+
+      if (this.showedNB == id) {
+        //console.log("h");
+        this.hideNB();
+      }
       //在桌面上的memo也应该删除吗？
       // this.memosOnDesk = this.memosOnDesk.filter((memo) => {
       //   return memo.id != id;
@@ -173,13 +200,15 @@ export default {
           });
           //}
           this.memos.unshift(obj);
+
           //this.deleteMMOD(obj);
         }
         this.deleteMMOD(obj);
-
+        this.searchVal = "";
         return;
       } else if (x) {
         this.memos.unshift(x);
+        this.searchVal = "";
       }
     },
 
@@ -287,11 +316,46 @@ export default {
     memos: {
       deep: true,
       handler(value) {
+        this.searchVal = "";
+        this.sMemos = [];
         localStorage.setItem("memos", JSON.stringify(value));
       },
     },
+
+    sMemos() {
+      if (this.searchVal == "") this.sMemos = [];
+    },
+
+    searchVal: {
+      deep: true,
+      handler(value) {
+        // if (value == "") {
+        //   this.sMemos = this.memos;
+        //   return;
+        // }
+
+        this.sMemos = [];
+        throttle(() => {
+          var x = this.memos.filter((m) => {
+            /*先不用正则写？ */
+            return m.content.includes(value);
+          });
+          this.sMemos = x;
+        }, 300);
+      },
+    },
   },
-  computed: {},
+  computed: {
+    showedNBname() {
+      var x = "";
+      this.notebooks.forEach((n) => {
+        if (n.id == this.showedNB) {
+          x = n.name;
+        }
+      });
+      return x;
+    },
+  },
   // mounted() {
   //   var obj = {
   //     id: 666,
@@ -324,21 +388,36 @@ export default {
 #app {
   width: 100%;
   height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: palevioletred;
+  width: 100%;
+  height: 100%;
 }
 
 body textarea p {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+div {
+  border-radius: 3px;
+}
+
 .banner {
   position: absolute;
-  left: 0;
-  top: 0;
-  background-color: #fafafa;
-  width: 99%;
-  height: 100px;
+  left: 8px;
+  right: 10px;
+  top: 10px;
+  background-color: #fafafade;
+
+  width: cal(100% - 23px);
+  height: 85px;
   overflow: auto;
   padding-left: 5px;
+  padding-bottom: 5px;
 }
 
 .banner .btn-add {
@@ -363,7 +442,7 @@ body textarea p {
   top: 110px;
   width: 200px;
   height: calc(100% - 150px);
-  background-color: #fafafa;
+  background-color: #fafafade;
   overflow: auto;
   padding: 5px;
 }
@@ -372,9 +451,9 @@ body textarea p {
   position: absolute;
   top: 110px;
   right: 10px;
-  width: calc(100% - 250px);
+  width: calc(100% - 235px);
   height: calc(100% - 140px);
-  background-color: #fafafa;
+  background-color: #fafafade;
 }
 
 .footer {
@@ -384,6 +463,20 @@ body textarea p {
   background-color: black;
   width: 100%;
   height: 20px;
+  border-radius: 0;
+}
+
+.searchbar {
+  border: 0;
+  border-bottom: 1px solid red;
+  width: 190px;
+  height: 23px;
+  background-color: transparent;
+}
+.searchbar::placeholder {
+  font-size: 16px;
+  color: #aaa;
+  font-style: italic;
 }
 
 button {
@@ -394,7 +487,8 @@ button {
 }
 
 button:hover {
-  background-color: gray;
+  background-color: hotpink;
+  color: #fafafa;
 }
 
 .testBox {
@@ -409,18 +503,18 @@ button:hover {
   width: 8px;
 }
 *::-webkit-scrollbar-track-piece {
-  background-color: #fafafa;
+  background-color: #fafafa00;
 }
 *::-webkit-scrollbar-track {
-  background-color: #fafafa;
+  background-color: #fafafa8d;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #999;
+  background-color: rgba(153, 153, 153, 0.5);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #777;
+  background-color: rgba(119, 119, 119, 0.5);
 }
 
 *::-webkit-scrollbar-button {
