@@ -81,7 +81,7 @@ ul li:hover {
 
 .sideMemos {
   position: relative;
-  width: 180px;
+  width: 170px;
   min-height: 50px;
   max-height: 100px;
   border: 1px solid #000;
@@ -91,6 +91,7 @@ ul li:hover {
   padding: 5px;
   background-color: #fff;
   user-select: none;
+  transition: top 0.2 ease;
 }
 
 .sideMemos:hover {

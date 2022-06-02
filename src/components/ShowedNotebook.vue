@@ -1,5 +1,5 @@
 <template>
-  <div class="NBmain">
+  <div :class="this.NBname ? 'NBmain' : 'NBname'" :style="styleObj">
     <div class="header">
       <button @click="hideNotebook" class="btn-close">&times;</button>
       <span>{{ this.NBname }}</span>
@@ -31,6 +31,7 @@ export default {
     return {
       memos: [],
       //NBdata: null,
+      styleObj: { transform: "scale(1)" },
     };
   },
   props: [
@@ -43,7 +44,12 @@ export default {
   ],
   methods: {
     hideNotebook() {
-      this.hideNB();
+      this.styleObj.transform = "scale(0.01)";
+      setTimeout(() => {
+        this.hideNB();
+
+        this.styleObj.transform = "scale(1)";
+      }, 200);
     },
 
     // test() {
@@ -77,6 +83,15 @@ div .NBmain {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
   background-color: #fafafa;
   z-index: 100;
+
+  transform-origin: right bottom;
+  animation: zoomIn 0.1s ease-in;
+  transition: transform 0.4s ease;
+}
+
+.play {
+  /* animation: zoomOut 0.1s ease-in; */
+  background: yellow;
 }
 
 div .header {
@@ -122,5 +137,27 @@ div .header {
 .header:hover {
   opacity: 1;
   cursor: default;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    background: yellow;
+    /* transform-origin: top left;
+    transform: scale(1); */
+  }
+  to {
+    background: red;
+    /* transform-origin: top left;
+    transform: scale(0); */
+  }
 }
 </style>

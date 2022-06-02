@@ -1,8 +1,9 @@
--<template>
+<template>
   <div>
     <button class="btn-add" @click="addMemoOnDesk">
       <i class="fa fa-plus"></i>
     </button>
+
     <my-memo-o-d
       v-for="m in memosOnDesk"
       :key="m.id"
@@ -37,8 +38,8 @@ export default {
         id: nanoid(),
         content: "",
         notebookId: "001",
-        "position-t": Math.floor(Math.random() * 200),
-        "position-l": Math.floor(Math.random() * 200),
+        "position-t": Math.floor(Math.random() * 250),
+        "position-l": Math.floor(Math.random() * 450),
         "z-index": 0,
       };
       this.addMMOD(MemoODObj);

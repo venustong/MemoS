@@ -4,7 +4,10 @@
     @dblclick.self.prevent="showNotebook(this.notebook.id)"
     @click.self="changeNBname(0)"
     @drop="dropHandler"
+    @dragenter="dragEnterHandler"
     @dragover="dragOverHandler"
+    @dragleave="dragLeaveHandle"
+    :style="oriStyle"
   >
     <div
       class="delete"
@@ -15,12 +18,13 @@
     </div>
 
     <div
-      class="folder"
+      class="tab"
+      :style="getTabStyle(this.notebook.memoCount)"
       @click.self="changeNBname(0)"
       @dblclick.stop="showNotebook(this.notebook.id)"
     ></div>
     <!-- <div
-      class="folder"
+      class="tab"
       @click.self="changeNBname(0)"
       @dblclick.stop="showNotebook(this.notebook.id)"
     >
@@ -59,9 +63,28 @@ export default {
       menuShow: false,
       changeName: false,
       value: "",
+      oriStyle: {
+        "background-color": "",
+        "border-color": "",
+      },
+      tabStyle: {
+        background: "red",
+      },
     };
   },
   methods: {
+    getTabStyle(val) {
+      if (val <= 0) {
+        return {
+          background: "",
+        };
+      } else {
+        return {
+          background: "palevioletred",
+        };
+      }
+    },
+
     showNotebook(val) {
       this.isShow = val;
       this.showNB(val);
@@ -98,9 +121,23 @@ export default {
     },
 
     //拖拽事件
+    //闪烁问题未改善
+    dragEnterHandler(e) {
+      this.oriStyle["background-color"] = "rgb(253, 215, 201)";
+      this.oriStyle["border-color"] = "#aaa";
+      e.preventDefault();
+    },
     dragOverHandler(e) {
       //console.log(e);
       e.preventDefault();
+      this.oriStyle["background-color"] = "rgb(253, 215, 201)";
+      this.oriStyle["border-color"] = "#aaa";
+    },
+
+    dragLeaveHandle(e) {
+      e.preventDefault();
+      this.oriStyle["background-color"] = "";
+      this.oriStyle["border-color"] = "";
     },
 
     dropHandler(e) {
@@ -109,6 +146,8 @@ export default {
       this.updateNB(this.notebook.id, this.notebook.name, n + 1);
       this.addMemo(id);
       e.dataTransfer.clearData();
+      this.oriStyle["background-color"] = "";
+      this.oriStyle["border-color"] = "";
     },
 
     addMemo(id) {
@@ -193,7 +232,7 @@ div .menu {
   border: 1px solid black;
 }
 
-.folder {
+.tab {
   position: absolute;
   border-radius: 3px 0 0 3px;
   top: -1px;
@@ -207,18 +246,18 @@ div .menu {
   border: 1px solid #333;
 }
 
-.origin:hover .folder {
+.origin:hover .tab {
   background-color: hotpink;
   border: 1px solid hotpink;
   color: hotpink;
 }
 
-.folder:hover {
+.tab:hover {
   background-color: hotpink;
   border: 1px solid hotpink;
 }
 
-/* .folder > i {
+/* .tab > i {
   border: 1px solid blue;
 } */
 
